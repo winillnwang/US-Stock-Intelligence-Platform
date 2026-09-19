@@ -1,6 +1,8 @@
+import os
 import sys
 from pathlib import Path
 
+import django
 from dotenv import load_dotenv
 
 
@@ -9,13 +11,20 @@ BACKEND_DIR = BASE_DIR / "backend"
 
 sys.path.append(str(BACKEND_DIR))
 
+load_dotenv(BASE_DIR / ".env")
+
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE",
+    "config.settings"
+)
+
+django.setup()
+
+from stocks.models import Stock, StockPrice
 from stocks.services.alpha_vantage import (
     fetch_daily_prices,
     transform_time_series,
 )
-
-
-load_dotenv(BASE_DIR / ".env")
 
 data = fetch_daily_prices("AAPL")
 
@@ -25,3 +34,38 @@ clean_prices = transform_time_series(time_series)
 print("Total Records:", len(clean_prices))
 print("First Record:", clean_prices[0])
 print("Last Record:", clean_prices[-1])
+
+stock, created = Stock.objects.get_or_create(
+    symbol="AAPL",
+    defaults={
+        "company_name": "Apple Inc.",
+    },
+)
+
+print("Stock:", stock)
+print("Created:", created)
+
+created_count = 0
+updated_count = 0
+
+for clean_price in clean_prices:
+    stock_price, price_created = StockPrice.objects.update_or_create(
+        stock=stock,
+        date=clean_price["date"],
+        defaults={
+            "open": clean_price["open"],
+            "high": clean_price["high"],
+            "low": clean_price["low"],
+            "close": clean_price["close"],
+            "volume": clean_price["volume"],
+        },
+    )
+    
+    if price_created:
+        created_count += 1
+    else:
+        updated_count += 1
+
+print("Created Prices:", created_count)
+print("Updated Prices:", updated_count)
+
