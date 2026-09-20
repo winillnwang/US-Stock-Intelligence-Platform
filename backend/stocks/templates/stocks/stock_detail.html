@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Detail</title>
+</head>
+<body>
+    <h1>Stock Detail Page</h1>
+
+    {% if stock %}
+        <p>Symbol: {{ stock.symbol }}</p>
+        <p>Company: {{ stock.company_name }}</p>
+
+        {% if latest_price %}
+            <p>Date: {{ latest_price.date }}</p>
+            <p>Open: {{ latest_price.open }}</p>
+            <p>High: {{ latest_price.high }}</p>
+            <p>Low: {{ latest_price.low }}</p>
+            <p>Close: {{ latest_price.close }}</p>
+            <p>Volume: {{ latest_price.volume }}</p>
+        {% else %}
+            <p>Price data not found</p>
+        {% endif %}
+
+        <h2>Recent Prices</h2>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Open</th>
+                    <th>High</th>
+                    <th>Low</th>
+                    <th>Close</th>
+                    <th>Volume</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for price in recent_prices %}
+                    <tr>
+                        <td>{{ price.date }}</td>
+                        <td>{{ price.open }}</td>
+                        <td>{{ price.high }}</td>
+                        <td>{{ price.low }}</td>
+                        <td>{{ price.close }}</td>
+                        <td>{{ price.volume }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p>
+            <a href="{% url 'stock_search' %}">
+                Back to Search
+            </a>
+        </p>
+
+    {% else %}
+        <p>Stock not found</p>
+    {% endif %}
+</body>
+</html>

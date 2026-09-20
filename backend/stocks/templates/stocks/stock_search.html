@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stock Search</title>
+</head>
+
+<body>
+    <h1>Stock Search Page</h1>
+
+    <form method="get">
+        <input
+            type="text"
+            name="symbol"
+            placeholder="Enter stock symbol"
+            value="{{ symbol }}"
+        >
+        <button type="submit">Search</button>
+    </form>
+
+    {% if not symbol %}
+        <p>Please provide a stock symbol</p>
+
+    {% elif stock %}
+        <p>Symbol: {{ symbol }}</p>
+
+        <p>
+            Stock found:
+            <a href="{% url 'stock_detail' stock.symbol %}">
+                {{ stock.symbol }}
+            </a>
+        </p>
+
+        <p>Company: {{ stock.company_name }}</p>
+
+        {% if latest_price %}
+            <p>Date: {{ latest_price.date }}</p>
+            <p>Open: {{ latest_price.open }}</p>
+            <p>High: {{ latest_price.high }}</p>
+            <p>Low: {{ latest_price.low }}</p>
+            <p>Close: {{ latest_price.close }}</p>
+            <p>Volume: {{ latest_price.volume }}</p>
+        {% else %}
+            <p>Price data not found</p>
+        {% endif %}
+
+    {% else %}
+        <p>Symbol: {{ symbol }}</p>
+        <p>Stock not found</p>
+    {% endif %}
+</body>
+</html>
