@@ -24,35 +24,48 @@
 
         <h2>Analysis</h2>
 
-          <p>
-              Recent 5-Day Average Close:
-              {{ recent_5_avg_close }}
-          </p>
-          <p>
-              Recent 10-Day Average Close:
-              {{ recent_10_avg_close }}
-          </p>
-          <p>
-              Trend Signal:
-              {{ trend_signal }}
-          </p>
-          <p>
-              Latest Change:
+            <p>
+                Recent 5-Day Average Close:
+                {{ recent_5_avg_close }}
+            </p>
 
-              {% if latest_change_pct > 0 %}
-                  <span style="color: green;">
-                      {{ latest_change_pct }}%
-                  </span>
-              {% elif latest_change_pct < 0 %}
-                  <span style="color: red;">
-                      {{ latest_change_pct }}%
-                  </span>
-              {% else %}
-                  <span style="color: gray;">
-                      {{ latest_change_pct }}%
-                  </span>
-              {% endif %}
-          </p>
+            <p>
+                Recent 10-Day Average Close:
+                {{ recent_10_avg_close }}
+            </p>
+
+            <p>
+                Trend Signal:
+                {{ trend_signal }}
+            </p>
+
+            <p>
+                Latest Change:
+
+                {% if latest_change_pct > 0 %}
+                    <span style="color: green;">
+                        {{ latest_change_pct }}%
+                    </span>
+                {% elif latest_change_pct < 0 %}
+                    <span style="color: red;">
+                        {{ latest_change_pct }}%
+                    </span>
+                {% else %}
+                    <span style="color: gray;">
+                        {{ latest_change_pct }}%
+                    </span>
+                {% endif %}
+            </p>
+
+            <p>
+                Recent 30-Day High Close:
+                {{ recent_30_high }}
+            </p>
+
+            <p>
+                Recent 30-Day Low Close:
+                {{ recent_30_low }}
+            </p>
 
         <h2>Recent Prices</h2>
 

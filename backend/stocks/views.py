@@ -70,6 +70,8 @@ def stock_detail(request, symbol):
     chart_close_values = []
     chart_ma_10_values = []
     latest_change_pct = None
+    recent_30_high = None
+    recent_30_low = None
     
     if not df.empty:
         df["close"] = df["close"].astype(float)
@@ -88,6 +90,8 @@ def stock_detail(request, symbol):
         )
         
         chart_data = df.tail(30)
+        recent_30_high = round(chart_data["close"].max(),2)
+        recent_30_low = round(chart_data["close"].min(),2)
 
         chart_labels = chart_data["date"].astype(str).tolist()
         chart_close_values = chart_data["close"].tolist()
@@ -117,6 +121,8 @@ def stock_detail(request, symbol):
         "chart_close_values": chart_close_values,
         "chart_ma_10_values": chart_ma_10_values,
         "latest_change_pct": latest_change_pct,
+        "recent_30_high": recent_30_high,
+        "recent_30_low": recent_30_low,
     }
 
     return render(
