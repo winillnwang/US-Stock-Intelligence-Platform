@@ -92,6 +92,7 @@ def update_stock(symbol):
     print("Latest Date:", clean_prices[0]["date"])
     print("Created Prices:", created_count)
     print("Updated Prices:", updated_count)
+    print(f"Completed: {symbol}")
     
 if symbol == "ALL":
     for stock_symbol in supported_symbols:
