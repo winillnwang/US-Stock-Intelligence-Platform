@@ -41,7 +41,11 @@ if symbol != "ALL" and symbol not in company_names:
     sys.exit(1)
 def update_stock(symbol):
     print(f"\n=== Updating {symbol} ===")
-    data = fetch_daily_prices(symbol)
+    try:
+        data = fetch_daily_prices(symbol)
+    except Exception as e:
+        print(f"Failed to fetch {symbol}: {e}")
+        return
     if "Time Series (Daily)" not in data:
       print(f"Failed to fetch daily prices for {symbol}")
       print("API response:", data)
