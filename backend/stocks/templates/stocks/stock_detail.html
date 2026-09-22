@@ -35,12 +35,31 @@
     .price-table tbody tr:hover {
     background-color: #f9f9f9;
     }
+    h1 {
+    margin-bottom: 24px;
+    font-size: 32px;
+    }
+    .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    }
+    @media (max-width: 768px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+    }
     </style>
 </head>
 <body>
-    <h1>Stock Detail Page</h1>
+    {% if stock %}
+    <h1>{{ stock.symbol }} - {{ stock.company_name }}</h1>
+    {% else %}
+    <h1>Stock Detail</h1>
+    {% endif %}
 
     {% if stock %}
+    <div class="summary-grid">
         <div class="card">
             <h2>Stock Summary</h2>
             <p>Symbol: {{ stock.symbol }}</p>
@@ -61,6 +80,7 @@
                 <p>Price data not found</p>
             {% endif %}
         </div>
+    </div>    
         <div class="card">
             <h2>Analysis</h2>
 
