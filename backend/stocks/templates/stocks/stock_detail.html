@@ -52,6 +52,10 @@
     .analysis-grid {
         grid-template-columns: 1fr;
     }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
     }
     .analysis-grid {
     display: grid;
@@ -63,6 +67,11 @@
     padding: 12px;
     margin: 0;
     border-radius: 6px;
+    }
+    .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
     }
     </style>
 </head>
@@ -189,11 +198,20 @@
               </p>
         </div>
         <div class="card">
-              <h2>Charts</h2>
-              <h3>Price Chart</h3>
-              <canvas id="priceChart"></canvas>
-              <h3>Volume Chart</h3>
-              <canvas id="volumeChart"></canvas>
+    <h2>Charts</h2>
+
+    <div class="chart-grid">
+            <div>
+                <h3>Price Chart</h3>
+                <canvas id="priceChart"></canvas>
+            </div>
+
+            <div>
+                <h3>Volume Chart</h3>
+                <canvas id="volumeChart"></canvas>
+            </div>
+        </div>
+    </div>
 
           {% else %}
               <p>Stock not found</p>
