@@ -42,7 +42,9 @@ def stock_detail(request, symbol):
 
     latest_price = None
     recent_prices = None
-    price_data = []  
+    price_data = []
+    distance_from_30_high_pct = None
+    distance_from_30_low_pct = None  
 
     if stock is not None:
         latest_price = StockPrice.objects.filter(
@@ -92,6 +94,11 @@ def stock_detail(request, symbol):
         chart_data = df.tail(30)
         recent_30_high = round(chart_data["close"].max(),2)
         recent_30_low = round(chart_data["close"].min(),2)
+        latest_close = chart_data["close"].iloc[-1]
+
+        distance_from_30_high_pct = round((latest_close - recent_30_high) / recent_30_high * 100,2)
+
+        distance_from_30_low_pct = round((latest_close - recent_30_low) / recent_30_low * 100,2)
 
         chart_labels = chart_data["date"].astype(str).tolist()
         chart_close_values = chart_data["close"].tolist()
@@ -123,6 +130,8 @@ def stock_detail(request, symbol):
         "latest_change_pct": latest_change_pct,
         "recent_30_high": recent_30_high,
         "recent_30_low": recent_30_low,
+        "distance_from_30_high_pct": distance_from_30_high_pct,
+        "distance_from_30_low_pct": distance_from_30_low_pct,
     }
 
     return render(
