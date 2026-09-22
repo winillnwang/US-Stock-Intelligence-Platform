@@ -34,50 +34,58 @@ company_names = {
     "AAPL": "Apple Inc.",
     "SOXL": "Direxion Daily Semiconductor Bull 3X Shares",
 }
-if symbol not in company_names:
+supported_symbols = list(company_names.keys())
+if symbol != "ALL" and symbol not in company_names:
     print(f"Unsupported symbol: {symbol}")
-    print("Supported symbols:", ", ".join(company_names.keys()))
+    print("Supported symbols:", ", ".join(supported_symbols))
     sys.exit(1)
-data = fetch_daily_prices(symbol)
+def update_stock(symbol):
+    data = fetch_daily_prices(symbol)
 
-time_series = data["Time Series (Daily)"]
-clean_prices = transform_time_series(time_series)
+    time_series = data["Time Series (Daily)"]
+    clean_prices = transform_time_series(time_series)
 
-print("Total Records:", len(clean_prices))
-print("First Record:", clean_prices[0])
-print("Last Record:", clean_prices[-1])
+    print("Total Records:", len(clean_prices))
+    print("First Record:", clean_prices[0])
+    print("Last Record:", clean_prices[-1])
 
-stock, created = Stock.objects.get_or_create(
-    symbol=symbol,
-    defaults={
-        "company_name": company_names[symbol],
-    },
-)
-
-print("Stock:", stock)
-print("Created:", created)
-
-created_count = 0
-updated_count = 0
-
-for clean_price in clean_prices:
-    stock_price, price_created = StockPrice.objects.update_or_create(
-        stock=stock,
-        date=clean_price["date"],
+    stock, created = Stock.objects.get_or_create(
+        symbol=symbol,
         defaults={
-            "open": clean_price["open"],
-            "high": clean_price["high"],
-            "low": clean_price["low"],
-            "close": clean_price["close"],
-            "volume": clean_price["volume"],
+            "company_name": company_names[symbol],
         },
     )
-    
-    if price_created:
-        created_count += 1
-    else:
-        updated_count += 1
 
-print("Created Prices:", created_count)
-print("Updated Prices:", updated_count)
+    print("Stock:", stock)
+    print("Created:", created)
+
+    created_count = 0
+    updated_count = 0
+
+    for clean_price in clean_prices:
+        stock_price, price_created = StockPrice.objects.update_or_create(
+            stock=stock,
+            date=clean_price["date"],
+            defaults={
+                "open": clean_price["open"],
+                "high": clean_price["high"],
+                "low": clean_price["low"],
+                "close": clean_price["close"],
+                "volume": clean_price["volume"],
+            },
+        )
+
+        if price_created:
+            created_count += 1
+        else:
+            updated_count += 1
+
+    print("Created Prices:", created_count)
+    print("Updated Prices:", updated_count)
+    
+if symbol == "ALL":
+    for stock_symbol in supported_symbols:
+        update_stock(stock_symbol)
+else:
+    update_stock(symbol)    
 
