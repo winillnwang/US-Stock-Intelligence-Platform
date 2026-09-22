@@ -45,7 +45,9 @@ def update_stock(symbol):
 
     time_series = data["Time Series (Daily)"]
     clean_prices = transform_time_series(time_series)
-
+    if not clean_prices:
+      print(f"No price data returned for {symbol}")
+      return
     print("Total Records:", len(clean_prices))
     print("First Record:", clean_prices[0])
     print("Last Record:", clean_prices[-1])
