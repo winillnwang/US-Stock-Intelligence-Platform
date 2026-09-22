@@ -48,6 +48,21 @@
     .summary-grid {
         grid-template-columns: 1fr;
     }
+
+    .analysis-grid {
+        grid-template-columns: 1fr;
+    }
+    }
+    .analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    }
+    .analysis-grid p {
+    background-color: #f8f8f8;
+    padding: 12px;
+    margin: 0;
+    border-radius: 6px;
     }
     </style>
 </head>
@@ -83,6 +98,7 @@
     </div>    
         <div class="card">
             <h2>Analysis</h2>
+            <div class="analysis-grid">
 
                 <p>
                     Recent 5-Day Average Close:
@@ -135,6 +151,7 @@
                     Distance from 30-Day Low:
                     {{ distance_from_30_low_pct }}%
                 </p>
+            </div>    
         </div>
         <div class="card">
               <h2>Recent Prices</h2>
