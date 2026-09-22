@@ -1,4 +1,5 @@
 from django.shortcuts import render
+import pandas as pd
 
 from .models import Stock, StockPrice
 
@@ -41,21 +42,63 @@ def stock_detail(request, symbol):
 
     latest_price = None
     recent_prices = None
+    price_data = []  
 
     if stock is not None:
         latest_price = StockPrice.objects.filter(
             stock=stock
         ).order_by("-date").first()
-
         recent_prices = StockPrice.objects.filter(
             stock=stock
         ).order_by("-date")[:5]
+        price_data = StockPrice.objects.filter(
+        stock=stock
+        ).order_by("date").values(
+        "date",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        )
 
+    df = pd.DataFrame(list(price_data))
+    
+    recent_5_avg_close = None
+    recent_10_avg_close = None
+    
+    if not df.empty:
+        df["close"] = df["close"].astype(float)
+
+        recent_5_avg_close = round(
+            df["close"].tail(5).mean(),
+            2
+        )
+
+        recent_10_avg_close = round(
+        df["close"].tail(10).mean(),
+        2
+        )
+
+    trend_signal = None
+
+    if (
+        recent_5_avg_close is not None
+        and recent_10_avg_close is not None
+       ):
+        if recent_5_avg_close > recent_10_avg_close:
+            trend_signal = "Short-term price is above the 10-day average"
+        else:
+            trend_signal = "Short-term price is not above the 10-day average"
+            
     context = {
         "symbol": symbol,
         "stock": stock,
         "latest_price": latest_price,
         "recent_prices": recent_prices,
+        "recent_5_avg_close": recent_5_avg_close,
+        "recent_10_avg_close": recent_10_avg_close,
+        "trend_signal": trend_signal,
     }
 
     return render(

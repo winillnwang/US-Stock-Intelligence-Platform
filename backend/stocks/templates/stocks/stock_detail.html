@@ -22,6 +22,21 @@
             <p>Price data not found</p>
         {% endif %}
 
+        <h2>Analysis</h2>
+
+          <p>
+              Recent 5-Day Average Close:
+              {{ recent_5_avg_close }}
+          </p>
+          <p>
+              Recent 10-Day Average Close:
+              {{ recent_10_avg_close }}
+          </p>
+          <p>
+              Trend Signal:
+              {{ trend_signal }}
+          </p>
+
         <h2>Recent Prices</h2>
 
         <table border="1">
