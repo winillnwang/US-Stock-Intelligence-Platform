@@ -25,8 +25,12 @@ from stocks.services.alpha_vantage import (
     fetch_daily_prices,
     transform_time_series,
 )
-
-data = fetch_daily_prices("AAPL")
+symbol = 'AAPL'
+company_names = {
+    "AAPL": "Apple Inc.",
+    "SOXL": "Direxion Daily Semiconductor Bull 3X Shares",
+}
+data = fetch_daily_prices(symbol)
 
 time_series = data["Time Series (Daily)"]
 clean_prices = transform_time_series(time_series)
@@ -36,9 +40,9 @@ print("First Record:", clean_prices[0])
 print("Last Record:", clean_prices[-1])
 
 stock, created = Stock.objects.get_or_create(
-    symbol="AAPL",
+    symbol=symbol,
     defaults={
-        "company_name": "Apple Inc.",
+        "company_name": company_names[symbol],
     },
 )
 
