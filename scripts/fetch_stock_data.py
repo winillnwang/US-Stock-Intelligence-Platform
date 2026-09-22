@@ -80,7 +80,7 @@ def update_stock(symbol):
             created_count += 1
         else:
             updated_count += 1
-
+    print("Latest Date:", clean_prices[0]["date"])
     print("Created Prices:", created_count)
     print("Updated Prices:", updated_count)
     
