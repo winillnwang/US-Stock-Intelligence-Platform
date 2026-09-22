@@ -111,8 +111,9 @@
         </p>
 
         <h2>Price Chart</h2>
-
         <canvas id="priceChart"></canvas>
+        <h2>Volume Chart</h2>
+        <canvas id="volumeChart"></canvas>
 
     {% else %}
         <p>Stock not found</p>
@@ -122,6 +123,7 @@
     {{ chart_labels|json_script:"chart-labels" }}
     {{ chart_close_values|json_script:"chart-close-values" }}
     {{ chart_ma_10_values|json_script:"chart-ma-10-values" }}
+    {{ chart_volume_values|json_script:"chart-volume-values" }}
 
     <script>
         const chartLabels = JSON.parse(
@@ -136,7 +138,28 @@
             document.getElementById("chart-ma-10-values").textContent
         );
 
+        const chartVolumeValues = JSON.parse(
+            document.getElementById("chart-volume-values").textContent
+        );
+
         const ctx = document.getElementById("priceChart");
+
+        const volumeCtx = document.getElementById("volumeChart");
+
+            if (volumeCtx) {
+                new Chart(volumeCtx, {
+                    type: "bar",
+                    data: {
+                        labels: chartLabels,
+                        datasets: [
+                            {
+                                label: "Volume",
+                                data: chartVolumeValues,
+                            }
+                        ]
+                    }
+                });
+            }
 
         if (ctx) {
             new Chart(ctx, {

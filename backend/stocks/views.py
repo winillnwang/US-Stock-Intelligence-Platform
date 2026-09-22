@@ -74,6 +74,7 @@ def stock_detail(request, symbol):
     latest_change_pct = None
     recent_30_high = None
     recent_30_low = None
+    chart_volume_values = []
     
     if not df.empty:
         df["close"] = df["close"].astype(float)
@@ -103,6 +104,7 @@ def stock_detail(request, symbol):
         chart_labels = chart_data["date"].astype(str).tolist()
         chart_close_values = chart_data["close"].tolist()
         chart_ma_10_values = chart_data["ma_10"].tolist()
+        chart_volume_values = chart_data["volume"].tolist()
 
     trend_signal = None
         
@@ -132,6 +134,7 @@ def stock_detail(request, symbol):
         "recent_30_low": recent_30_low,
         "distance_from_30_high_pct": distance_from_30_high_pct,
         "distance_from_30_low_pct": distance_from_30_low_pct,
+        "chart_volume_values": chart_volume_values,
     }
 
     return render(
