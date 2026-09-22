@@ -8,9 +8,11 @@
     <h1>Stock Detail Page</h1>
 
     {% if stock %}
+        <h2>Stock Summary</h2>
         <p>Symbol: {{ stock.symbol }}</p>
         <p>Company: {{ stock.company_name }}</p>
 
+        <h2>Latest Price</h2>
         {% if latest_price %}
             <p>Date: {{ latest_price.date }}</p>
             <p>Open: {{ latest_price.open }}</p>
@@ -109,10 +111,11 @@
                 Back to Search
             </a>
         </p>
-
-        <h2>Price Chart</h2>
+        
+        <h2>Charts</h2>
+        <h3>Price Chart</h3>
         <canvas id="priceChart"></canvas>
-        <h2>Volume Chart</h2>
+        <h3>Volume Chart</h3>
         <canvas id="volumeChart"></canvas>
 
     {% else %}
