@@ -3,185 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <title>Stock Detail</title>
+    <style>
+    body {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+    }
+    .card {
+    background-color: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    }
+    </style>
 </head>
 <body>
     <h1>Stock Detail Page</h1>
 
     {% if stock %}
-        <h2>Stock Summary</h2>
-        <p>Symbol: {{ stock.symbol }}</p>
-        <p>Company: {{ stock.company_name }}</p>
+        <div class="card">
+            <h2>Stock Summary</h2>
+            <p>Symbol: {{ stock.symbol }}</p>
+            <p>Company: {{ stock.company_name }}</p>
+        </div>
 
-        <h2>Latest Price</h2>
-        {% if latest_price %}
-            <p>Date: {{ latest_price.date }}</p>
-            <p>Open: {{ latest_price.open }}</p>
-            <p>High: {{ latest_price.high }}</p>
-            <p>Low: {{ latest_price.low }}</p>
-            <p>Close: {{ latest_price.close }}</p>
-            <p>Volume: {{ latest_price.volume }}</p>
-        {% else %}
-            <p>Price data not found</p>
-        {% endif %}
+        <div class="card">
+            <h2>Latest Price</h2>
 
-        <h2>Analysis</h2>
+            {% if latest_price %}
+                <p>Date: {{ latest_price.date }}</p>
+                <p>Open: {{ latest_price.open }}</p>
+                <p>High: {{ latest_price.high }}</p>
+                <p>Low: {{ latest_price.low }}</p>
+                <p>Close: {{ latest_price.close }}</p>
+                <p>Volume: {{ latest_price.volume }}</p>
+            {% else %}
+                <p>Price data not found</p>
+            {% endif %}
+        </div>
+        <div class="card">
+            <h2>Analysis</h2>
 
-            <p>
-                Recent 5-Day Average Close:
-                {{ recent_5_avg_close }}
-            </p>
+                <p>
+                    Recent 5-Day Average Close:
+                    {{ recent_5_avg_close }}
+                </p>
 
-            <p>
-                Recent 10-Day Average Close:
-                {{ recent_10_avg_close }}
-            </p>
+                <p>
+                    Recent 10-Day Average Close:
+                    {{ recent_10_avg_close }}
+                </p>
 
-            <p>
-                Trend Signal:
-                {{ trend_signal }}
-            </p>
+                <p>
+                    Trend Signal:
+                    {{ trend_signal }}
+                </p>
 
-            <p>
-                Latest Change:
+                <p>
+                    Latest Change:
 
-                {% if latest_change_pct > 0 %}
-                    <span style="color: green;">
-                        {{ latest_change_pct }}%
-                    </span>
-                {% elif latest_change_pct < 0 %}
-                    <span style="color: red;">
-                        {{ latest_change_pct }}%
-                    </span>
-                {% else %}
-                    <span style="color: gray;">
-                        {{ latest_change_pct }}%
-                    </span>
-                {% endif %}
-            </p>
+                    {% if latest_change_pct > 0 %}
+                        <span style="color: green;">
+                            {{ latest_change_pct }}%
+                        </span>
+                    {% elif latest_change_pct < 0 %}
+                        <span style="color: red;">
+                            {{ latest_change_pct }}%
+                        </span>
+                    {% else %}
+                        <span style="color: gray;">
+                            {{ latest_change_pct }}%
+                        </span>
+                    {% endif %}
+                </p>
 
-            <p>
-                Recent 30-Day High Close:
-                {{ recent_30_high }}
-            </p>
+                <p>
+                    Recent 30-Day High Close:
+                    {{ recent_30_high }}
+                </p>
 
-            <p>
-                Recent 30-Day Low Close:
-                {{ recent_30_low }}
-            </p>
-            <p>
-                Distance from 30-Day High:
-                {{ distance_from_30_high_pct }}%
-            </p>
+                <p>
+                    Recent 30-Day Low Close:
+                    {{ recent_30_low }}
+                </p>
+                <p>
+                    Distance from 30-Day High:
+                    {{ distance_from_30_high_pct }}%
+                </p>
 
-            <p>
-                Distance from 30-Day Low:
-                {{ distance_from_30_low_pct }}%
-            </p>
+                <p>
+                    Distance from 30-Day Low:
+                    {{ distance_from_30_low_pct }}%
+                </p>
+        </div>
+        <div class="card">
+              <h2>Recent Prices</h2>
 
-        <h2>Recent Prices</h2>
+              <table border="1">
+                  <thead>
+                      <tr>
+                          <th>Date</th>
+                          <th>Open</th>
+                          <th>High</th>
+                          <th>Low</th>
+                          <th>Close</th>
+                          <th>Volume</th>
+                      </tr>
+                  </thead>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Open</th>
-                    <th>High</th>
-                    <th>Low</th>
-                    <th>Close</th>
-                    <th>Volume</th>
-                </tr>
-            </thead>
+                  <tbody>
+                      {% for price in recent_prices %}
+                          <tr>
+                              <td>{{ price.date }}</td>
+                              <td>{{ price.open }}</td>
+                              <td>{{ price.high }}</td>
+                              <td>{{ price.low }}</td>
+                              <td>{{ price.close }}</td>
+                              <td>{{ price.volume }}</td>
+                          </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
 
-            <tbody>
-                {% for price in recent_prices %}
-                    <tr>
-                        <td>{{ price.date }}</td>
-                        <td>{{ price.open }}</td>
-                        <td>{{ price.high }}</td>
-                        <td>{{ price.low }}</td>
-                        <td>{{ price.close }}</td>
-                        <td>{{ price.volume }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+              <p>
+                  <a href="{% url 'stock_search' %}">
+                      Back to Search
+                  </a>
+              </p>
+        </div>
+        <div class="card">
+              <h2>Charts</h2>
+              <h3>Price Chart</h3>
+              <canvas id="priceChart"></canvas>
+              <h3>Volume Chart</h3>
+              <canvas id="volumeChart"></canvas>
 
-        <p>
-            <a href="{% url 'stock_search' %}">
-                Back to Search
-            </a>
-        </p>
-        
-        <h2>Charts</h2>
-        <h3>Price Chart</h3>
-        <canvas id="priceChart"></canvas>
-        <h3>Volume Chart</h3>
-        <canvas id="volumeChart"></canvas>
+          {% else %}
+              <p>Stock not found</p>
+          {% endif %}
+          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    {% else %}
-        <p>Stock not found</p>
-    {% endif %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+          {{ chart_labels|json_script:"chart-labels" }}
+          {{ chart_close_values|json_script:"chart-close-values" }}
+          {{ chart_ma_10_values|json_script:"chart-ma-10-values" }}
+          {{ chart_volume_values|json_script:"chart-volume-values" }}
 
-    {{ chart_labels|json_script:"chart-labels" }}
-    {{ chart_close_values|json_script:"chart-close-values" }}
-    {{ chart_ma_10_values|json_script:"chart-ma-10-values" }}
-    {{ chart_volume_values|json_script:"chart-volume-values" }}
+          <script>
+              const chartLabels = JSON.parse(
+                  document.getElementById("chart-labels").textContent
+              );
 
-    <script>
-        const chartLabels = JSON.parse(
-            document.getElementById("chart-labels").textContent
-        );
+              const chartCloseValues = JSON.parse(
+                  document.getElementById("chart-close-values").textContent
+              );
 
-        const chartCloseValues = JSON.parse(
-            document.getElementById("chart-close-values").textContent
-        );
+              const chartMa10Values = JSON.parse(
+                  document.getElementById("chart-ma-10-values").textContent
+              );
 
-        const chartMa10Values = JSON.parse(
-            document.getElementById("chart-ma-10-values").textContent
-        );
+              const chartVolumeValues = JSON.parse(
+                  document.getElementById("chart-volume-values").textContent
+              );
 
-        const chartVolumeValues = JSON.parse(
-            document.getElementById("chart-volume-values").textContent
-        );
+              const ctx = document.getElementById("priceChart");
 
-        const ctx = document.getElementById("priceChart");
+              const volumeCtx = document.getElementById("volumeChart");
 
-        const volumeCtx = document.getElementById("volumeChart");
+                  if (volumeCtx) {
+                      new Chart(volumeCtx, {
+                          type: "bar",
+                          data: {
+                              labels: chartLabels,
+                              datasets: [
+                                  {
+                                      label: "Volume",
+                                      data: chartVolumeValues,
+                                  }
+                              ]
+                          }
+                      });
+                  }
 
-            if (volumeCtx) {
-                new Chart(volumeCtx, {
-                    type: "bar",
-                    data: {
-                        labels: chartLabels,
-                        datasets: [
-                            {
-                                label: "Volume",
-                                data: chartVolumeValues,
-                            }
-                        ]
-                    }
-                });
-            }
-
-        if (ctx) {
-            new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: chartLabels,
-                    datasets: [
-                        {
-                            label: "Close Price",
-                            data: chartCloseValues,
-                        },
-                        {
-                            label: "10-Day Average",
-                            data: chartMa10Values,
-                        }
-                    ]
-                }
-            });
-        }
-    </script>
+              if (ctx) {
+                  new Chart(ctx, {
+                      type: "line",
+                      data: {
+                          labels: chartLabels,
+                          datasets: [
+                              {
+                                  label: "Close Price",
+                                  data: chartCloseValues,
+                              },
+                              {
+                                  label: "10-Day Average",
+                                  data: chartMa10Values,
+                              }
+                          ]
+                      }
+                  });
+              }
+          </script>
+    </div>
 </body>
 </html>
