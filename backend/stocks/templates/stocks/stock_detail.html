@@ -17,6 +17,24 @@
     margin-bottom: 20px;
     border-radius: 8px;
     }
+    .price-table {
+    width: 100%;
+    border-collapse: collapse;
+    }
+
+    .price-table th,
+    .price-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .price-table th {
+        background-color: #f0f0f0;
+    }
+    .price-table tbody tr:hover {
+    background-color: #f9f9f9;
+    }
     </style>
 </head>
 <body>
@@ -101,7 +119,7 @@
         <div class="card">
               <h2>Recent Prices</h2>
 
-              <table border="1">
+              <table class="price-table">
                   <thead>
                       <tr>
                           <th>Date</th>
