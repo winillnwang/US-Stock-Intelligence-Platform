@@ -42,7 +42,10 @@ if symbol != "ALL" and symbol not in company_names:
 def update_stock(symbol):
     print(f"\n=== Updating {symbol} ===")
     data = fetch_daily_prices(symbol)
-
+    if "Time Series (Daily)" not in data:
+      print(f"Failed to fetch daily prices for {symbol}")
+      print("API response:", data)
+      return
     time_series = data["Time Series (Daily)"]
     clean_prices = transform_time_series(time_series)
     if not clean_prices:
