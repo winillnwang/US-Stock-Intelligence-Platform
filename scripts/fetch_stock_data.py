@@ -45,16 +45,16 @@ def update_stock(symbol):
         data = fetch_daily_prices(symbol)
     except Exception as e:
         print(f"Failed to fetch {symbol}: {e}")
-        return
+        return False
     if "Time Series (Daily)" not in data:
       print(f"Failed to fetch daily prices for {symbol}")
       print("API response:", data)
-      return
+      return False
     time_series = data["Time Series (Daily)"]
     clean_prices = transform_time_series(time_series)
     if not clean_prices:
       print(f"No price data returned for {symbol}")
-      return
+      return False
     print("Total Records:", len(clean_prices))
     print("First Record:", clean_prices[0])
     print("Last Record:", clean_prices[-1])
@@ -93,13 +93,23 @@ def update_stock(symbol):
     print("Created Prices:", created_count)
     print("Updated Prices:", updated_count)
     print(f"Completed: {symbol}")
+    return True
     
 if symbol == "ALL":
+    completed_symbols = []
+    failed_symbols = []
+
     for stock_symbol in supported_symbols:
-        update_stock(stock_symbol)
+        success = update_stock(stock_symbol)
+
+        if success:
+            completed_symbols.append(stock_symbol)
+        else:
+            failed_symbols.append(stock_symbol)
 
     print("\n=== Update Summary ===")
-    print("Completed:", ", ".join(supported_symbols))
+    print("Completed:", ", ".join(completed_symbols))
+    print("Failed:", ", ".join(failed_symbols))
 else:
-    update_stock(symbol)   
+    update_stock(symbol)  
 
