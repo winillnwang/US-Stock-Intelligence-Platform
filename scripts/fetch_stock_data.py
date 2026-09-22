@@ -96,22 +96,26 @@ def update_stock(symbol):
     print("Updated Prices:", updated_count)
     print(f"Completed: {symbol}")
     return True
-    
-if symbol == "ALL":
-    completed_symbols = []
-    failed_symbols = []
 
-    for stock_symbol in supported_symbols:
-        success = update_stock(stock_symbol)
+def main():    
+    if symbol == "ALL":
+        completed_symbols = []
+        failed_symbols = []
 
-        if success:
-            completed_symbols.append(stock_symbol)
-        else:
-            failed_symbols.append(stock_symbol)
+        for stock_symbol in supported_symbols:
+            success = update_stock(stock_symbol)
 
-    print("\n=== Update Summary ===")
-    print("Completed:", ", ".join(completed_symbols))
-    print("Failed:", ", ".join(failed_symbols))
-else:
-    update_stock(symbol)  
+            if success:
+                completed_symbols.append(stock_symbol)
+            else:
+                failed_symbols.append(stock_symbol)
+
+        print("\n=== Update Summary ===")
+        print("Completed:", ", ".join(completed_symbols))
+        print("Failed:", ", ".join(failed_symbols))
+    else:
+        update_stock(symbol) 
+        
+if __name__ == "__main__":
+    main()         
 
