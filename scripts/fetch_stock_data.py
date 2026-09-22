@@ -25,7 +25,11 @@ from stocks.services.alpha_vantage import (
     fetch_daily_prices,
     transform_time_series,
 )
-symbol = 'AAPL'
+if len(sys.argv) < 2:
+    print("Usage: python scripts/fetch_stock_data.py <SYMBOL>")
+    sys.exit(1)
+
+symbol = sys.argv[1].upper()
 company_names = {
     "AAPL": "Apple Inc.",
     "SOXL": "Direxion Daily Semiconductor Bull 3X Shares",
