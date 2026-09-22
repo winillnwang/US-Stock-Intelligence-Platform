@@ -38,7 +38,20 @@
           </p>
           <p>
               Latest Change:
-              {{ latest_change_pct }}%
+
+              {% if latest_change_pct > 0 %}
+                  <span style="color: green;">
+                      {{ latest_change_pct }}%
+                  </span>
+              {% elif latest_change_pct < 0 %}
+                  <span style="color: red;">
+                      {{ latest_change_pct }}%
+                  </span>
+              {% else %}
+                  <span style="color: gray;">
+                      {{ latest_change_pct }}%
+                  </span>
+              {% endif %}
           </p>
 
         <h2>Recent Prices</h2>
