@@ -30,12 +30,18 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 symbol = sys.argv[1].upper()
-company_names = {
-    "AAPL": "Apple Inc.",
-    "SOXL": "Direxion Daily Semiconductor Bull 3X Shares",
+STOCK_CONFIG = {
+    "AAPL": {
+        "company_name": "Apple Inc.",
+    },
+    "SOXL": {
+        "company_name": "Direxion Daily Semiconductor Bull 3X Shares",
+    },
 }
-supported_symbols = list(company_names.keys())
-if symbol != "ALL" and symbol not in company_names:
+
+supported_symbols = list(STOCK_CONFIG.keys())
+
+if symbol != "ALL" and symbol not in STOCK_CONFIG:
     print(f"Unsupported symbol: {symbol}")
     print("Supported symbols:", ", ".join(supported_symbols))
     sys.exit(1)
@@ -60,10 +66,10 @@ def update_stock(symbol):
     print("Last Record:", clean_prices[-1])
 
     stock, created = Stock.objects.get_or_create(
-        symbol=symbol,
-        defaults={
-            "company_name": company_names[symbol],
-        },
+    symbol=symbol,
+    defaults={
+        "company_name": STOCK_CONFIG[symbol]["company_name"],
+    },
     )
 
     print("Stock:", stock)
