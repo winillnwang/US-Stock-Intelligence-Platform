@@ -97,6 +97,9 @@ def update_stock(symbol):
 if symbol == "ALL":
     for stock_symbol in supported_symbols:
         update_stock(stock_symbol)
+
+    print("\n=== Update Summary ===")
+    print("Completed:", ", ".join(supported_symbols))
 else:
-    update_stock(symbol)    
+    update_stock(symbol)   
 
