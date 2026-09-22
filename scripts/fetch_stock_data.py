@@ -34,6 +34,10 @@ company_names = {
     "AAPL": "Apple Inc.",
     "SOXL": "Direxion Daily Semiconductor Bull 3X Shares",
 }
+if symbol not in company_names:
+    print(f"Unsupported symbol: {symbol}")
+    print("Supported symbols:", ", ".join(company_names.keys()))
+    sys.exit(1)
 data = fetch_daily_prices(symbol)
 
 time_series = data["Time Series (Daily)"]
