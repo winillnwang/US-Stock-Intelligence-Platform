@@ -40,6 +40,7 @@ if symbol != "ALL" and symbol not in company_names:
     print("Supported symbols:", ", ".join(supported_symbols))
     sys.exit(1)
 def update_stock(symbol):
+    print(f"\n=== Updating {symbol} ===")
     data = fetch_daily_prices(symbol)
 
     time_series = data["Time Series (Daily)"]
