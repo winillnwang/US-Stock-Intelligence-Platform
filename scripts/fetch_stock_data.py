@@ -33,9 +33,15 @@ symbol = sys.argv[1].upper()
 STOCK_CONFIG = {
     "AAPL": {
         "company_name": "Apple Inc.",
+        "exchange": "NASDAQ",
+        "sector": "Technology",
+        "industry": "Consumer Electronics",
     },
     "SOXL": {
         "company_name": "Direxion Daily Semiconductor Bull 3X Shares",
+        "exchange": "NYSE Arca",
+        "sector": "",
+        "industry": "",
     },
 }
 
@@ -65,10 +71,13 @@ def update_stock(symbol):
     print("First Record:", clean_prices[0])
     print("Last Record:", clean_prices[-1])
 
-    stock, created = Stock.objects.get_or_create(
+    stock, created = Stock.objects.update_or_create(
     symbol=symbol,
     defaults={
         "company_name": STOCK_CONFIG[symbol]["company_name"],
+        "exchange": STOCK_CONFIG[symbol]["exchange"],
+        "sector": STOCK_CONFIG[symbol]["sector"],
+        "industry": STOCK_CONFIG[symbol]["industry"],
     },
     )
 
