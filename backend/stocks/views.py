@@ -68,9 +68,11 @@ def stock_detail(request, symbol):
     recent_10_avg_close = None
     chart_labels = []
     chart_close_values = []
+    chart_ma_10_values = []
     
     if not df.empty:
         df["close"] = df["close"].astype(float)
+        df["ma_10"] = df["close"].rolling(10).mean()
 
         recent_5_avg_close = round(
             df["close"].tail(5).mean(),
@@ -86,6 +88,7 @@ def stock_detail(request, symbol):
 
         chart_labels = chart_data["date"].astype(str).tolist()
         chart_close_values = chart_data["close"].tolist()
+        chart_ma_10_values = chart_data["ma_10"].tolist()
 
     trend_signal = None
         
@@ -109,6 +112,7 @@ def stock_detail(request, symbol):
         "trend_signal": trend_signal,
         "chart_labels": chart_labels,
         "chart_close_values": chart_close_values,
+        "chart_ma_10_values": chart_ma_10_values,
     }
 
     return render(

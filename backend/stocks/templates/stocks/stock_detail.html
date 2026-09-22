@@ -82,6 +82,7 @@
 
     {{ chart_labels|json_script:"chart-labels" }}
     {{ chart_close_values|json_script:"chart-close-values" }}
+    {{ chart_ma_10_values|json_script:"chart-ma-10-values" }}
 
     <script>
         const chartLabels = JSON.parse(
@@ -90,6 +91,10 @@
 
         const chartCloseValues = JSON.parse(
             document.getElementById("chart-close-values").textContent
+        );
+
+        const chartMa10Values = JSON.parse(
+            document.getElementById("chart-ma-10-values").textContent
         );
 
         const ctx = document.getElementById("priceChart");
@@ -103,6 +108,10 @@
                         {
                             label: "Close Price",
                             data: chartCloseValues,
+                        },
+                        {
+                            label: "10-Day Average",
+                            data: chartMa10Values,
                         }
                     ]
                 }
