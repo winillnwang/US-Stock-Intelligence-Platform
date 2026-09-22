@@ -4,6 +4,7 @@ from pathlib import Path
 
 import django
 from dotenv import load_dotenv
+from stock_config import STOCK_CONFIG
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,20 +31,6 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 symbol = sys.argv[1].upper()
-STOCK_CONFIG = {
-    "AAPL": {
-        "company_name": "Apple Inc.",
-        "exchange": "NASDAQ",
-        "sector": "Technology",
-        "industry": "Consumer Electronics",
-    },
-    "SOXL": {
-        "company_name": "Direxion Daily Semiconductor Bull 3X Shares",
-        "exchange": "NYSE Arca",
-        "sector": "",
-        "industry": "",
-    },
-}
 
 supported_symbols = list(STOCK_CONFIG.keys())
 
