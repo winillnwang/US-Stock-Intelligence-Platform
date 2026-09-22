@@ -71,8 +71,43 @@
             </a>
         </p>
 
+        <h2>Price Chart</h2>
+
+        <canvas id="priceChart"></canvas>
+
     {% else %}
         <p>Stock not found</p>
     {% endif %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {{ chart_labels|json_script:"chart-labels" }}
+    {{ chart_close_values|json_script:"chart-close-values" }}
+
+    <script>
+        const chartLabels = JSON.parse(
+            document.getElementById("chart-labels").textContent
+        );
+
+        const chartCloseValues = JSON.parse(
+            document.getElementById("chart-close-values").textContent
+        );
+
+        const ctx = document.getElementById("priceChart");
+
+        if (ctx) {
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: chartLabels,
+                    datasets: [
+                        {
+                            label: "Close Price",
+                            data: chartCloseValues,
+                        }
+                    ]
+                }
+            });
+        }
+    </script>
 </body>
 </html>
