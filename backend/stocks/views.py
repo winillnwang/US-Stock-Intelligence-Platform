@@ -69,9 +69,12 @@ def stock_detail(request, symbol):
     chart_labels = []
     chart_close_values = []
     chart_ma_10_values = []
+    latest_change_pct = None
     
     if not df.empty:
         df["close"] = df["close"].astype(float)
+        df["change_pct"] = df["close"].pct_change() * 100
+        latest_change_pct = round(df["change_pct"].iloc[-1],2)
         df["ma_10"] = df["close"].rolling(10).mean()
 
         recent_5_avg_close = round(
@@ -113,6 +116,7 @@ def stock_detail(request, symbol):
         "chart_labels": chart_labels,
         "chart_close_values": chart_close_values,
         "chart_ma_10_values": chart_ma_10_values,
+        "latest_change_pct": latest_change_pct,
     }
 
     return render(
