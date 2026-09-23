@@ -47,11 +47,11 @@ button {
     gap: 8px 24px;
 }
 @media (max-width: 600px) {
-  form {
-      flex-direction: column;
-  }
+    form {
+        flex-direction: column;
+    }
 
-  .price-summary {
-      grid-template-columns: 1fr;
-  }
+    .price-summary {
+        grid-template-columns: 1fr;
+    }
 }
