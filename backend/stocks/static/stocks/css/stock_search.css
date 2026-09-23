@@ -55,3 +55,11 @@ button {
         grid-template-columns: 1fr;
     }
 }
+.quick-stock-link {
+    display: inline-block;
+    padding: 6px 10px;
+    margin-right: 6px;
+    border: 1px solid #333;
+    border-radius: 6px;
+    text-decoration: none;
+}
