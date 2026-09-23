@@ -5,7 +5,8 @@ from .models import Stock, StockPrice
 
 
 def stock_search(request):
-    symbol = request.GET.get("symbol", "").strip().upper()
+    quick_symbols = ["AAPL", "SOXL"]
+    symbol = request.GET.get("symbol","").strip().upper()
 
     stock = None
     latest_price = None
@@ -24,6 +25,7 @@ def stock_search(request):
         "symbol": symbol,
         "stock": stock,
         "latest_price": latest_price,
+        "quick_symbols": quick_symbols,
     }
 
     return render(

@@ -20,9 +20,12 @@
         <button type="submit">搜尋</button>
     </form>
     <p>
-        常用股票：
-        <a href="?symbol=AAPL" class="quick-stock-link">AAPL</a>
-        <a href="?symbol=SOXL" class="quick-stock-link">SOXL</a>
+    常用股票：
+    {% for quick_symbol in quick_symbols %}
+        <a href="?symbol={{ quick_symbol }}" class="quick-stock-link">
+            {{ quick_symbol }}
+        </a>
+    {% endfor %}
     </p>
     <div class="result-card">
     {% if not symbol %}
