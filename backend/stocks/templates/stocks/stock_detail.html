@@ -85,47 +85,47 @@
     {% if stock %}
     <div class="summary-grid">
         <div class="card">
-            <h2>Stock Summary</h2>
-            <p>Symbol: {{ stock.symbol }}</p>
-            <p>Company: {{ stock.company_name }}</p>
+            <h2>股票摘要</h2>
+            <p>股票代號: {{ stock.symbol }}</p>
+            <p>公司名稱: {{ stock.company_name }}</p>
         </div>
 
         <div class="card">
-            <h2>Latest Price</h2>
+            <h2>最新價格</h2>
 
             {% if latest_price %}
-                <p>Date: {{ latest_price.date }}</p>
-                <p>Open: {{ latest_price.open }}</p>
-                <p>High: {{ latest_price.high }}</p>
-                <p>Low: {{ latest_price.low }}</p>
-                <p>Close: {{ latest_price.close }}</p>
-                <p>Volume: {{ latest_price.volume }}</p>
+                <p>日期: {{ latest_price.date|date:"Y/m/d" }}</p>
+                <p>開盤價: {{ latest_price.open }}</p>
+                <p>最高價: {{ latest_price.high }}</p>
+                <p>最低價: {{ latest_price.low }}</p>
+                <p>收盤價: {{ latest_price.close }}</p>
+                <p>成交量: {{ latest_price.volume }}</p>
             {% else %}
-                <p>Price data not found</p>
+                <p>查無股價資料</p>
             {% endif %}
         </div>
     </div>    
         <div class="card">
-            <h2>Analysis</h2>
+            <h2>股票分析</h2>
             <div class="analysis-grid">
 
                 <p>
-                    Recent 5-Day Average Close:
+                    5日平均收盤價:
                     {{ recent_5_avg_close }}
                 </p>
 
                 <p>
-                    Recent 10-Day Average Close:
+                    10日平均收盤價:
                     {{ recent_10_avg_close }}
                 </p>
 
                 <p>
-                    Trend Signal:
+                    趨勢訊號:
                     {{ trend_signal }}
                 </p>
 
                 <p>
-                    Latest Change:
+                    最新漲跌幅:
 
                     {% if latest_change_pct > 0 %}
                         <span style="color: green;">
@@ -143,44 +143,44 @@
                 </p>
 
                 <p>
-                    Recent 30-Day High Close:
+                    30日最高收盤價:
                     {{ recent_30_high }}
                 </p>
 
                 <p>
-                    Recent 30-Day Low Close:
+                    30日最低收盤價:
                     {{ recent_30_low }}
                 </p>
                 <p>
-                    Distance from 30-Day High:
+                    距離30日高點:
                     {{ distance_from_30_high_pct }}%
                 </p>
 
                 <p>
-                    Distance from 30-Day Low:
+                    距離30日低點:
                     {{ distance_from_30_low_pct }}%
                 </p>
             </div>    
         </div>
         <div class="card">
-              <h2>Recent Prices</h2>
+              <h2>近期股價</h2>
 
               <table class="price-table">
                   <thead>
                       <tr>
-                          <th>Date</th>
-                          <th>Open</th>
-                          <th>High</th>
-                          <th>Low</th>
-                          <th>Close</th>
-                          <th>Volume</th>
+                          <th>日期</th>
+                          <th>開盤價</th>
+                          <th>最高價</th>
+                          <th>最低價</th>
+                          <th>收盤價</th>
+                          <th>成交量</th>
                       </tr>
                   </thead>
 
                   <tbody>
                       {% for price in recent_prices %}
                           <tr>
-                              <td>{{ price.date }}</td>
+                              <td>{{ price.date|date:"Y/m/d" }}</td>
                               <td>{{ price.open }}</td>
                               <td>{{ price.high }}</td>
                               <td>{{ price.low }}</td>
@@ -193,21 +193,21 @@
 
               <p>
                   <a href="{% url 'stock_search' %}">
-                      Back to Search
+                      返回搜尋
                   </a>
               </p>
         </div>
         <div class="card">
-    <h2>Charts</h2>
+    <h2>圖表</h2>
 
     <div class="chart-grid">
             <div>
-                <h3>Price Chart</h3>
+                <h3>股價走勢</h3>
                 <canvas id="priceChart"></canvas>
             </div>
 
             <div>
-                <h3>Volume Chart</h3>
+                <h3>成交量</h3>
                 <canvas id="volumeChart"></canvas>
             </div>
         </div>
@@ -251,7 +251,7 @@
                               labels: chartLabels,
                               datasets: [
                                   {
-                                      label: "Volume",
+                                      label: "成交量",
                                       data: chartVolumeValues,
                                   }
                               ]
@@ -266,11 +266,11 @@
                           labels: chartLabels,
                           datasets: [
                               {
-                                  label: "Close Price",
+                                  label: "收盤價",
                                   data: chartCloseValues,
                               },
                               {
-                                  label: "10-Day Average",
+                                  label: "10日平均線",
                                   data: chartMa10Values,
                               }
                           ]

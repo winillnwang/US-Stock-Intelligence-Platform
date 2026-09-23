@@ -114,9 +114,9 @@ def stock_detail(request, symbol):
         and recent_10_avg_close is not None
        ):
         if recent_5_avg_close > recent_10_avg_close:
-            trend_signal = "Short-term price is above the 10-day average"
+            trend_signal = "短期股價高於 10 日平均線"
         else:
-            trend_signal = "Short-term price is not above the 10-day average"
+            trend_signal = "短期股價未高於 10 日平均線"
             
     context = {
         "symbol": symbol,
