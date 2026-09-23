@@ -52,6 +52,15 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 8px 24px;
     }
+    @media (max-width: 600px) {
+      form {
+          flex-direction: column;
+      }
+
+      .price-summary {
+          grid-template-columns: 1fr;
+      }
+    }
     </style>
 </head>
 
