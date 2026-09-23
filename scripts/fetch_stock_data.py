@@ -26,18 +26,7 @@ from stocks.services.alpha_vantage import (
     fetch_daily_prices,
     transform_time_series,
 )
-if len(sys.argv) < 2:
-    print("Usage: python scripts/fetch_stock_data.py <SYMBOL>")
-    sys.exit(1)
 
-symbol = sys.argv[1].upper()
-
-supported_symbols = list(STOCK_CONFIG.keys())
-
-if symbol != "ALL" and symbol not in STOCK_CONFIG:
-    print(f"Unsupported symbol: {symbol}")
-    print("Supported symbols:", ", ".join(supported_symbols))
-    sys.exit(1)
 def update_stock(symbol):
     print(f"\n=== Updating {symbol} ===")
     try:
@@ -98,6 +87,16 @@ def update_stock(symbol):
     return True
 
 def main():    
+    if len(sys.argv) < 2:
+        print("Usage: python scripts/fetch_stock_data.py <SYMBOL>")
+        sys.exit(1)
+    symbol = sys.argv[1].upper()
+    supported_symbols = list(STOCK_CONFIG.keys())
+
+    if symbol != "ALL" and symbol not in STOCK_CONFIG:
+        print(f"Unsupported symbol: {symbol}")
+        print("Supported symbols:", ", ".join(supported_symbols))
+        sys.exit(1)
     if symbol == "ALL":
         completed_symbols = []
         failed_symbols = []
