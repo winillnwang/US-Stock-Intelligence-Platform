@@ -6,7 +6,9 @@ from .models import Stock, StockPrice
 
 def stock_search(request):
     quick_symbols = list(
-        Stock.objects.values_list("symbol", flat=True)
+        Stock.objects.filter(
+            is_featured=True
+        ).values_list("symbol", flat=True)
     )
     symbol = request.GET.get("symbol", "").strip().upper()
 
