@@ -40,6 +40,18 @@
         border-radius: 8px;
         max-width: 600px;
     }
+    .detail-link {
+        display: inline-block;
+        padding: 8px 12px;
+        border: 1px solid #333;
+        border-radius: 6px;
+        text-decoration: none;
+    }
+    .price-summary {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px 24px;
+    }
     </style>
 </head>
 
@@ -60,27 +72,26 @@
         <p>請輸入股票代號</p>
 
     {% elif stock %}
-        <p>股票代號: {{ symbol }}</p>
+        <h2>{{ stock.symbol }}</h2>
 
+        <p>{{ stock.company_name }}</p>
         <p>
-            找到股票:
-            <a href="{% url 'stock_detail' stock.symbol %}">
-                {{ stock.symbol }}
+            <a href="{% url 'stock_detail' stock.symbol %}" class="detail-link">
+                查看詳細資料
             </a>
         </p>
-
-        <p>公司名稱: {{ stock.company_name }}</p>
-
-        {% if latest_price %}
+    {% if latest_price %}
+        <div class="price-summary">
             <p>日期: {{ latest_price.date|date:"Y/m/d" }}</p>
             <p>開盤價: {{ latest_price.open }}</p>
             <p>最高價: {{ latest_price.high }}</p>
             <p>最低價: {{ latest_price.low }}</p>
             <p>收盤價: {{ latest_price.close }}</p>
             <p>成交量: {{ latest_price.volume }}</p>
-        {% else %}
-            <p>查無股價資料</p>
-        {% endif %}
+        </div>
+    {% else %}
+        <p>查無股價資料</p>
+    {% endif %}
 
     {% else %}
         <p>股票代號: {{ symbol }}</p>
