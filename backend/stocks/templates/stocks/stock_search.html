@@ -34,7 +34,7 @@
         </p>
     {% if latest_price %}
         <div class="price-summary">
-            <p>日期: {{ latest_price.date|date:"Y/m/d" }}</p>
+            <p>資料最新日期: {{ latest_price.date|date:"Y/m/d" }}</p>
             <p>開盤價: {{ latest_price.open }}</p>
             <p>最高價: {{ latest_price.high }}</p>
             <p>最低價: {{ latest_price.low }}</p>
