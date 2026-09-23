@@ -1,67 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
 <head>
     <meta charset="UTF-8">
     <title>股票搜尋</title>
-    <style>
-    body {
-        font-family: Arial, sans-serif;
-        max-width: 900px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
-
-    h1 {
-        margin-bottom: 24px;
-    }
-
-    form {
-        display: flex;
-        gap: 8px;
-        margin-bottom: 24px;
-        max-width: 600px;
-    }
-
-    input[type="text"] {
-        flex: 1;
-        padding: 10px;
-        font-size: 16px;
-    }
-
-    button {
-        padding: 10px 16px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    .result-card {
-        border: 1px solid #ddd;
-        padding: 20px;
-        margin-top: 24px;
-        border-radius: 8px;
-        max-width: 600px;
-    }
-    .detail-link {
-        display: inline-block;
-        padding: 8px 12px;
-        border: 1px solid #333;
-        border-radius: 6px;
-        text-decoration: none;
-    }
-    .price-summary {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px 24px;
-    }
-    @media (max-width: 600px) {
-      form {
-          flex-direction: column;
-      }
-
-      .price-summary {
-          grid-template-columns: 1fr;
-      }
-    }
-    </style>
+    <link rel="stylesheet" href="{% static 'stocks/css/stock_search.css' %}">
 </head>
 
 <body>
