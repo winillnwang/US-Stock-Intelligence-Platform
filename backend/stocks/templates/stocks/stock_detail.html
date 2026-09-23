@@ -88,6 +88,11 @@
             <h2>股票摘要</h2>
             <p>股票代號: {{ stock.symbol }}</p>
             <p>公司名稱: {{ stock.company_name }}</p>
+            {% if latest_price %}
+            <p>資料最新日期: {{ latest_price.date|date:"Y/m/d" }}</p>
+            {% else %}
+            <p>資料最新日期: 尚無資料</p>
+            {% endif %}
         </div>
 
         <div class="card">
