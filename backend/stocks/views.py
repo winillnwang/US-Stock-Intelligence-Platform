@@ -5,8 +5,10 @@ from .models import Stock, StockPrice
 
 
 def stock_search(request):
-    quick_symbols = ["AAPL", "SOXL"]
-    symbol = request.GET.get("symbol","").strip().upper()
+    quick_symbols = list(
+        Stock.objects.values_list("symbol", flat=True)
+    )
+    symbol = request.GET.get("symbol", "").strip().upper()
 
     stock = None
     latest_price = None
