@@ -155,13 +155,14 @@
     </div>
 
           {% else %}
-              <p>Stock not found</p>
+              <p>找不到此股票</p>
           {% endif %}
           <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
           {{ chart_labels|json_script:"chart-labels" }}
           {{ chart_close_values|json_script:"chart-close-values" }}
           {{ chart_ma_10_values|json_script:"chart-ma-10-values" }}
+          {{ chart_ma_20_values|json_script:"chart-ma-20-values" }}
           {{ chart_volume_values|json_script:"chart-volume-values" }}
 
           <script>
@@ -175,6 +176,10 @@
 
               const chartMa10Values = JSON.parse(
                   document.getElementById("chart-ma-10-values").textContent
+              );
+
+              const chartMa20Values = JSON.parse(
+                  document.getElementById("chart-ma-20-values").textContent
               );
 
               const chartVolumeValues = JSON.parse(
@@ -213,6 +218,10 @@
                               {
                                   label: "10日平均線",
                                   data: chartMa10Values,
+                              },
+                              {
+                                  label: "20日平均線",
+                                  data: chartMa20Values,
                               }
                           ]
                       }

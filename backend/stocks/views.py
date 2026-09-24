@@ -78,6 +78,7 @@ def stock_detail(request, symbol):
     chart_labels = []
     chart_close_values = []
     chart_ma_10_values = []
+    chart_ma_20_values = []
     latest_change_pct = None
     recent_30_high = None
     recent_30_low = None
@@ -88,6 +89,7 @@ def stock_detail(request, symbol):
         df["change_pct"] = df["close"].pct_change() * 100
         latest_change_pct = round(df["change_pct"].iloc[-1],2)
         df["ma_10"] = df["close"].rolling(10).mean()
+        df["ma_20"] = df["close"].rolling(20).mean()
 
         recent_5_avg_close = round(
             df["close"].tail(5).mean(),
@@ -116,6 +118,7 @@ def stock_detail(request, symbol):
         chart_labels = chart_data["date"].astype(str).tolist()
         chart_close_values = chart_data["close"].tolist()
         chart_ma_10_values = chart_data["ma_10"].tolist()
+        chart_ma_20_values = chart_data["ma_20"].tolist()
         chart_volume_values = chart_data["volume"].tolist()
 
     trend_signal = None
@@ -141,6 +144,7 @@ def stock_detail(request, symbol):
         "chart_labels": chart_labels,
         "chart_close_values": chart_close_values,
         "chart_ma_10_values": chart_ma_10_values,
+        "chart_ma_20_values": chart_ma_20_values,
         "latest_change_pct": latest_change_pct,
         "recent_30_high": recent_30_high,
         "recent_30_low": recent_30_low,
