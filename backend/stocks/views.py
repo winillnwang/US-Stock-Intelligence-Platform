@@ -71,9 +71,10 @@ def stock_detail(request, symbol):
         )
 
     df = pd.DataFrame(list(price_data))
-    
+
     recent_5_avg_close = None
     recent_10_avg_close = None
+    recent_20_avg_close = None
     chart_labels = []
     chart_close_values = []
     chart_ma_10_values = []
@@ -81,7 +82,7 @@ def stock_detail(request, symbol):
     recent_30_high = None
     recent_30_low = None
     chart_volume_values = []
-    
+
     if not df.empty:
         df["close"] = df["close"].astype(float)
         df["change_pct"] = df["close"].pct_change() * 100
@@ -94,10 +95,15 @@ def stock_detail(request, symbol):
         )
 
         recent_10_avg_close = round(
-        df["close"].tail(10).mean(),
-        2
+            df["close"].tail(10).mean(),
+            2
         )
-        
+
+        recent_20_avg_close = round(
+            df["close"].tail(20).mean(),
+            2
+        )
+
         chart_data = df.tail(30)
         recent_30_high = round(chart_data["close"].max(),2)
         recent_30_low = round(chart_data["close"].min(),2)
@@ -113,7 +119,6 @@ def stock_detail(request, symbol):
         chart_volume_values = chart_data["volume"].tolist()
 
     trend_signal = None
-        
 
     if (
         recent_5_avg_close is not None
@@ -123,7 +128,7 @@ def stock_detail(request, symbol):
             trend_signal = "短期股價高於 10 日平均線"
         else:
             trend_signal = "短期股價未高於 10 日平均線"
-            
+
     context = {
         "symbol": symbol,
         "stock": stock,
@@ -131,6 +136,7 @@ def stock_detail(request, symbol):
         "recent_prices": recent_prices,
         "recent_5_avg_close": recent_5_avg_close,
         "recent_10_avg_close": recent_10_avg_close,
+        "recent_20_avg_close": recent_20_avg_close,
         "trend_signal": trend_signal,
         "chart_labels": chart_labels,
         "chart_close_values": chart_close_values,
@@ -148,7 +154,3 @@ def stock_detail(request, symbol):
         "stocks/stock_detail.html",
         context,
     )
-    
-
-
-
