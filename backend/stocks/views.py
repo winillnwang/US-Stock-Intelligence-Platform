@@ -86,12 +86,17 @@ def stock_detail(request, symbol):
     return_10d_pct = None
     return_20d_pct = None
     volatility_20d = None
+    volume_change_pct = None
     chart_volume_values = []
 
     if not df.empty:
         df["close"] = df["close"].astype(float)
+        df["volume"] = df["volume"].astype(float)
         df["change_pct"] = df["close"].pct_change() * 100
         latest_change_pct = round(df["change_pct"].iloc[-1],2)
+        volume_change_pct = round(
+            (df["volume"].iloc[-1] / df["volume"].iloc[-2] - 1) * 100, 2
+        )
         return_5d_pct = round(
             (df["close"].iloc[-1] / df["close"].iloc[-6] - 1) * 100, 2
         )
@@ -166,6 +171,7 @@ def stock_detail(request, symbol):
         "return_10d_pct": return_10d_pct,
         "return_20d_pct": return_20d_pct,
         "volatility_20d": volatility_20d,
+        "volume_change_pct": volume_change_pct,
         "recent_30_high": recent_30_high,
         "recent_30_low": recent_30_low,
         "distance_from_30_high_pct": distance_from_30_high_pct,
