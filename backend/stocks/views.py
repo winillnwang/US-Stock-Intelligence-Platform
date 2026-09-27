@@ -5,7 +5,7 @@ from .models import Stock, StockPrice
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import StockSerializer
+from .serializers import StockPriceSerializer, StockSerializer
 
 def stock_search(request):
     quick_symbols = list(
@@ -210,5 +210,22 @@ def stock_detail_api(request, symbol):
     )
 
     serializer = StockSerializer(stock)
+
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def stock_price_list_api(request, symbol):
+    stock = get_object_or_404(
+        Stock,
+        symbol=symbol.upper(),
+    )
+
+    prices = StockPrice.objects.filter(stock=stock).order_by("-date")[:100]
+
+    serializer = StockPriceSerializer(
+        prices,
+        many=True,
+    )
 
     return Response(serializer.data)

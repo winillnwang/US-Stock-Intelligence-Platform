@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Stock
+from .models import Stock, StockPrice
 
 
 class StockSerializer(serializers.ModelSerializer):
@@ -14,4 +14,17 @@ class StockSerializer(serializers.ModelSerializer):
             "sector",
             "industry",
             "is_featured",
+        ]
+
+
+class StockPriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StockPrice
+        fields = [
+            "date",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
         ]
