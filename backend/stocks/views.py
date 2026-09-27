@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 import pandas as pd
 
 from .models import Stock, StockPrice
@@ -193,11 +193,22 @@ def stock_detail(request, symbol):
         context,
     )
 
-
 @api_view(["GET"])
 def stock_list_api(request):
     stocks = Stock.objects.all().order_by("symbol")
 
     serializer = StockSerializer(stocks, many=True)
+
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def stock_detail_api(request, symbol):
+    stock = get_object_or_404(
+        Stock,
+        symbol=symbol.upper(),
+    )
+
+    serializer = StockSerializer(stock)
 
     return Response(serializer.data)
