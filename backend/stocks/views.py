@@ -2,7 +2,10 @@ from django.shortcuts import render
 import pandas as pd
 
 from .models import Stock, StockPrice
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
+from .serializers import StockSerializer
 
 def stock_search(request):
     quick_symbols = list(
@@ -189,3 +192,12 @@ def stock_detail(request, symbol):
         "stocks/stock_detail.html",
         context,
     )
+
+
+@api_view(["GET"])
+def stock_list_api(request):
+    stocks = Stock.objects.all().order_by("symbol")
+
+    serializer = StockSerializer(stocks, many=True)
+
+    return Response(serializer.data)
