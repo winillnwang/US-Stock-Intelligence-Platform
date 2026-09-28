@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ..models import Stock, StockPrice
@@ -8,6 +9,7 @@ from .serializers import StockPriceSerializer, StockSerializer
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def stock_list_api(request):
     stocks = Stock.objects.all().order_by("symbol")
 
@@ -17,6 +19,7 @@ def stock_list_api(request):
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def stock_detail_api(request, symbol):
     stock = get_object_or_404(
         Stock,
@@ -29,6 +32,7 @@ def stock_detail_api(request, symbol):
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def stock_price_list_api(request, symbol):
     limit = request.query_params.get("limit", 100)
 
