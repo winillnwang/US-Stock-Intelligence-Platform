@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 import requests
 
@@ -8,13 +8,28 @@ from ..models import StockPrice
 
 
 def transform_price(date_string, raw_price):
+    required_fields = [
+        "1. open",
+        "2. high",
+        "3. low",
+        "4. close",
+        "5. volume",
+    ]
+
+    for field in required_fields:
+        if field not in raw_price:
+            raise ValueError(f"Missing required field: {field}")
+
     price_date = datetime.strptime(date_string, "%Y-%m-%d").date()
 
-    open_price = Decimal(raw_price["1. open"])
-    high_price = Decimal(raw_price["2. high"])
-    low_price = Decimal(raw_price["3. low"])
-    close_price = Decimal(raw_price["4. close"])
-    volume = int(raw_price["5. volume"])
+    try:
+        open_price = Decimal(raw_price["1. open"])
+        high_price = Decimal(raw_price["2. high"])
+        low_price = Decimal(raw_price["3. low"])
+        close_price = Decimal(raw_price["4. close"])
+        volume = int(raw_price["5. volume"])
+    except (InvalidOperation, ValueError) as exc:
+        raise ValueError("Invalid numeric value in price data") from exc
 
     if volume < 0:
         raise ValueError("Volume cannot be negative")
