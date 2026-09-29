@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import datetime
 from decimal import Decimal, InvalidOperation
@@ -5,6 +6,9 @@ from decimal import Decimal, InvalidOperation
 import requests
 
 from ..models import StockPrice
+
+
+logger = logging.getLogger(__name__)
 
 
 def transform_price(date_string, raw_price):
@@ -62,7 +66,12 @@ def transform_time_series(time_series):
     for date_string, raw_price in time_series.items():
         try:
             clean_price = transform_price(date_string, raw_price)
-        except ValueError:
+        except ValueError as exc:
+            logger.warning(
+                "Skipping invalid price record for %s: %s",
+                date_string,
+                exc,
+            )
             continue
 
         clean_prices.append(clean_price)

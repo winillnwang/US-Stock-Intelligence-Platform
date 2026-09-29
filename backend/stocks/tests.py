@@ -169,3 +169,32 @@ class TransformTimeSeriesTest(SimpleTestCase):
             "No valid price records found",
         ):
             transform_time_series(time_series)
+
+    def test_logs_warning_when_invalid_price_record_is_skipped(self):
+        time_series = {
+            "2026-09-29": {
+                "1. open": "100.00",
+                "2. high": "110.00",
+                "3. low": "90.00",
+                "4. close": "105.00",
+                "5. volume": "1000",
+            },
+            "2026-09-28": {
+                "1. open": "invalid",
+                "2. high": "110.00",
+                "3. low": "90.00",
+                "4. close": "105.00",
+                "5. volume": "1000",
+            },
+        }
+
+        with self.assertLogs(
+            "stocks.services.alpha_vantage",
+            level="WARNING",
+        ) as log_context:
+            transform_time_series(time_series)
+
+        self.assertIn(
+            "Skipping invalid price record for 2026-09-28",
+            log_context.output[0],
+        )
