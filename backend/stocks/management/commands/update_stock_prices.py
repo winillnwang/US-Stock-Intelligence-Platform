@@ -28,7 +28,7 @@ class Command(BaseCommand):
         for index, stock in enumerate(stocks):
             try:
                 result = update_stock_prices(stock)
-            except RuntimeError as exc:
+            except (RuntimeError, ValueError) as exc:
                 self.stderr.write(
                     self.style.ERROR(
                         f"{stock.symbol}: {exc}"

@@ -113,3 +113,44 @@ class UpdateStockPricesCommandTest(TestCase):
             )
 
         mock_update_stock_prices.assert_not_called()
+
+    @patch(
+        "stocks.management.commands.update_stock_prices.update_stock_prices"
+    )
+    def test_continues_when_one_stock_has_data_quality_error(
+        self,
+        mock_update_stock_prices,
+    ):
+        mock_update_stock_prices.side_effect = [
+            ValueError("No valid price records found"),
+            {
+                "created": 1,
+                "updated": 99,
+            },
+        ]
+
+        stdout = StringIO()
+        stderr = StringIO()
+
+        call_command(
+            "update_stock_prices",
+            "AAPL",
+            "SOXL",
+            stdout=stdout,
+            stderr=stderr,
+        )
+
+        self.assertIn(
+            "AAPL: No valid price records found",
+            stderr.getvalue(),
+        )
+
+        self.assertIn(
+            "SOXL: created=1, updated=99",
+            stdout.getvalue(),
+        )
+
+        self.assertEqual(
+            mock_update_stock_prices.call_count,
+            2,
+        )
