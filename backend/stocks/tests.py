@@ -2,13 +2,16 @@ from unittest.mock import patch
 
 import requests
 
-from django.test import SimpleTestCase
+from django.test import SimpleTestCase, TestCase
 
+from stocks.models import Stock, StockPrice
 from stocks.services.alpha_vantage import (
     fetch_daily_prices,
     transform_price,
     transform_time_series,
     update_stock_prices,
+    save_price,
+    save_prices,
 )
 
 
@@ -401,4 +404,135 @@ class FetchDailyPricesTest(SimpleTestCase):
                 "apikey": "test-key",
             },
             timeout=10,
+        )
+
+
+class SavePriceTest(TestCase):
+    def setUp(self):
+        self.stock = Stock.objects.create(
+            symbol="AAPL",
+            company_name="Apple Inc.",
+        )
+
+    def test_creates_stock_price_when_record_does_not_exist(self):
+        clean_price = {
+            "date": "2026-09-29",
+            "open": "100.00",
+            "high": "110.00",
+            "low": "90.00",
+            "close": "105.00",
+            "volume": 1000,
+        }
+
+        stock_price, created = save_price(
+            self.stock,
+            clean_price,
+        )
+
+        self.assertTrue(created)
+        self.assertEqual(
+            StockPrice.objects.count(),
+            1,
+        )
+        self.assertEqual(
+            stock_price.stock,
+            self.stock,
+        )
+
+    def test_updates_existing_stock_price_without_creating_duplicate(self):
+        original_price = {
+            "date": "2026-09-29",
+            "open": "100.00",
+            "high": "110.00",
+            "low": "90.00",
+            "close": "105.00",
+            "volume": 1000,
+        }
+
+        updated_price = {
+            "date": "2026-09-29",
+            "open": "101.00",
+            "high": "111.00",
+            "low": "91.00",
+            "close": "106.00",
+            "volume": 2000,
+        }
+
+        save_price(
+            self.stock,
+            original_price,
+        )
+
+        stock_price, created = save_price(
+            self.stock,
+            updated_price,
+        )
+
+        self.assertFalse(created)
+        self.assertEqual(
+            StockPrice.objects.count(),
+            1,
+        )
+
+        stock_price.refresh_from_db()
+
+        self.assertEqual(
+            str(stock_price.close),
+            "106.0000",
+        )
+        self.assertEqual(
+            stock_price.volume,
+            2000,
+        )
+
+    def test_save_prices_returns_created_and_updated_counts(self):
+        existing_price = {
+            "date": "2026-09-28",
+            "open": "100.00",
+            "high": "110.00",
+            "low": "90.00",
+            "close": "105.00",
+            "volume": 1000,
+        }
+
+        save_price(
+            self.stock,
+            existing_price,
+        )
+
+        clean_prices = [
+            {
+                "date": "2026-09-28",
+                "open": "101.00",
+                "high": "111.00",
+                "low": "91.00",
+                "close": "106.00",
+                "volume": 2000,
+            },
+            {
+                "date": "2026-09-29",
+                "open": "120.00",
+                "high": "130.00",
+                "low": "115.00",
+                "close": "125.00",
+                "volume": 3000,
+            },
+        ]
+
+        result = save_prices(
+            self.stock,
+            clean_prices,
+        )
+
+        self.assertEqual(
+            result,
+            {
+                "created": 1,
+                "updated": 1,
+            },
+        )
+
+        self.assertEqual(
+            StockPrice.objects.count(),
+            2,
         )
