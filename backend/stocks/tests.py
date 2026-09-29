@@ -359,3 +359,46 @@ class FetchDailyPricesTest(SimpleTestCase):
             "Daily time series is missing from API response",
         ):
             fetch_daily_prices("AAPL")
+
+    @patch("stocks.services.alpha_vantage.requests.get")
+    @patch.dict(
+        "stocks.services.alpha_vantage.os.environ",
+        {"ALPHA_VANTAGE_API_KEY": "test-key"},
+    )
+    def test_returns_daily_price_data_when_request_succeeds(
+        self,
+        mock_get,
+    ):
+        mock_response = mock_get.return_value
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "Meta Data": {
+                "2. Symbol": "AAPL",
+            },
+            "Time Series (Daily)": {
+                "2026-09-29": {
+                    "1. open": "100.00",
+                    "2. high": "110.00",
+                    "3. low": "90.00",
+                    "4. close": "105.00",
+                    "5. volume": "1000",
+                },
+            },
+        }
+
+        result = fetch_daily_prices("AAPL")
+
+        self.assertIn(
+            "Time Series (Daily)",
+            result,
+        )
+
+        mock_get.assert_called_once_with(
+            "https://www.alphavantage.co/query",
+            params={
+                "function": "TIME_SERIES_DAILY",
+                "symbol": "AAPL",
+                "apikey": "test-key",
+            },
+            timeout=10,
+        )
