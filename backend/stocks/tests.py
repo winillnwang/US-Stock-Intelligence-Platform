@@ -1,8 +1,11 @@
+from unittest.mock import patch
+
 from django.test import SimpleTestCase
 
 from stocks.services.alpha_vantage import (
     transform_price,
     transform_time_series,
+    update_stock_prices,
 )
 
 
@@ -196,5 +199,77 @@ class TransformTimeSeriesTest(SimpleTestCase):
 
         self.assertIn(
             "Skipping invalid price record for 2026-09-28",
+            log_context.output[0],
+        )
+
+
+class UpdateStockPricesTest(SimpleTestCase):
+    @patch("stocks.services.alpha_vantage.save_prices")
+    @patch("stocks.services.alpha_vantage.transform_time_series")
+    @patch("stocks.services.alpha_vantage.fetch_daily_prices")
+    def test_logs_start_and_completion(
+        self,
+        mock_fetch_daily_prices,
+        mock_transform_time_series,
+        mock_save_prices,
+    ):
+        stock = type(
+            "StockStub",
+            (),
+            {"symbol": "AAPL"},
+        )()
+
+        mock_fetch_daily_prices.return_value = {"Time Series (Daily)": {}}
+
+        mock_transform_time_series.return_value = [{"date": "2026-09-29"}]
+
+        mock_save_prices.return_value = {
+            "created": 1,
+            "updated": 99,
+        }
+
+        with self.assertLogs(
+            "stocks.services.alpha_vantage",
+            level="INFO",
+        ) as log_context:
+            update_stock_prices(stock)
+
+        self.assertIn(
+            "Starting stock price update for AAPL",
+            log_context.output[0],
+        )
+
+        self.assertIn(
+            "Completed stock price update for AAPL: created=1 updated=99",
+            log_context.output[1],
+        )
+
+    @patch("stocks.services.alpha_vantage.fetch_daily_prices")
+    def test_logs_error_when_update_fails(
+        self,
+        mock_fetch_daily_prices,
+    ):
+        stock = type(
+            "StockStub",
+            (),
+            {"symbol": "AAPL"},
+        )()
+
+        mock_fetch_daily_prices.side_effect = RuntimeError(
+            "API rate limit"
+        )
+
+        with self.assertLogs(
+            "stocks.services.alpha_vantage",
+            level="ERROR",
+        ) as log_context:
+            with self.assertRaisesMessage(
+                RuntimeError,
+                "API rate limit",
+            ):
+                update_stock_prices(stock)
+
+        self.assertIn(
+            "Stock price update failed for AAPL: API rate limit",
             log_context.output[0],
         )

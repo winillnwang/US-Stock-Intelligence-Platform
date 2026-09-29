@@ -117,13 +117,30 @@ def save_prices(stock, clean_prices):
 
 
 def update_stock_prices(stock):
-    data = fetch_daily_prices(stock.symbol)
+    logger.info(
+        "Starting stock price update for %s",
+        stock.symbol,
+    )
 
-    time_series = data["Time Series (Daily)"]
+    try:
+        data = fetch_daily_prices(stock.symbol)
+        time_series = data["Time Series (Daily)"]
+        clean_prices = transform_time_series(time_series)
+        result = save_prices(stock, clean_prices)
+    except (RuntimeError, ValueError) as exc:
+        logger.error(
+            "Stock price update failed for %s: %s",
+            stock.symbol,
+            exc,
+        )
+        raise
 
-    clean_prices = transform_time_series(time_series)
-
-    result = save_prices(stock, clean_prices)
+    logger.info(
+        "Completed stock price update for %s: created=%s updated=%s",
+        stock.symbol,
+        result["created"],
+        result["updated"],
+    )
 
     return result
 
