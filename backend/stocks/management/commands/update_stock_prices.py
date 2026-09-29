@@ -26,15 +26,22 @@ class Command(BaseCommand):
             stocks.append(stock)
 
         for index, stock in enumerate(stocks):
-            result = update_stock_prices(stock)
-
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"{stock.symbol}: "
-                    f"created={result['created']}, "
-                    f"updated={result['updated']}"
+            try:
+                result = update_stock_prices(stock)
+            except RuntimeError as exc:
+                self.stderr.write(
+                    self.style.ERROR(
+                        f"{stock.symbol}: {exc}"
+                    )
                 )
-            )
+            else:
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"{stock.symbol}: "
+                        f"created={result['created']}, "
+                        f"updated={result['updated']}"
+                    )
+                )
 
             if index < len(stocks) - 1:
                 time.sleep(1)
