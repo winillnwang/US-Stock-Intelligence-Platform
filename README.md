@@ -151,3 +151,77 @@ flowchart LR
 - Docker / Docker Compose
 - GitHub Actions CI
 - OpenAPI / Swagger API Documentation
+
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/stocks/` | 取得股票清單 |
+| GET | `/api/stocks/{symbol}/` | 取得單一股票基本資料 |
+| GET | `/api/stocks/{symbol}/prices/` | 取得歷史股價資料 |
+| POST | `/api/token/` | 取得 JWT access / refresh token |
+| POST | `/api/token/refresh/` | 更新 JWT access token |
+
+### Query Parameters
+
+`GET /api/stocks/{symbol}/prices/`
+
+- `limit`
+  - 預設值：`100`
+  - 範圍：`1` ～ `100`
+
+### API Documentation
+
+- OpenAPI Schema: `/api/schema/`
+- Swagger UI: `/api/docs/`
+
+
+## Run Instructions
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/winillnwang/US-Stock-Intelligence-Platform.git
+cd US-Stock-Intelligence-Platform
+```
+
+### 2. Create Environment Variables
+
+在專案根目錄建立 `.env` 檔案：
+
+```env
+DB_NAME=us_stock_db
+DB_USER=root
+DB_PASSWORD=your-password
+DB_HOST=127.0.0.1
+DB_PORT=8888
+ALPHA_VANTAGE_API_KEY=your-api-key
+```
+
+### 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run Django Locally
+
+```bash
+cd backend
+python manage.py migrate
+python manage.py runserver
+```
+
+### 5. Run with Docker Compose
+
+```bash
+docker compose up --build
+```
+
+### 6. API Documentation
+
+啟動服務後，可開啟：
+
+- Swagger UI: `http://127.0.0.1:8000/api/docs/`
+- OpenAPI Schema: `http://127.0.0.1:8000/api/schema/`
