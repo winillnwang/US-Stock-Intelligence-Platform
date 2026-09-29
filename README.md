@@ -17,6 +17,14 @@ US Stock Intelligence Platform 是一個以 Python、Django、MySQL 建立的美
 本專案著重於後端工程與資料流程設計，包含 JWT Authentication、Data Pipeline、Data Quality Validation、Logging、Exception Handling、Automated Tests、Docker、GitHub Actions CI 與 OpenAPI / Swagger 文件。
 
 
+## System Architecture
+
+The platform follows an end-to-end data pipeline—from external market data ingestion and quality validation to analytics and secure API delivery.
+
+![US Stock Intelligence Platform architecture](docs/images/us-stock-intelligence-platform-architecture.png)
+
+> Alpha Vantage API → Data Ingestion → Validation → MySQL → Pandas Analysis → Django REST API → JWT Authentication → Swagger / Client
+
 
 ## Tech Stack
 
