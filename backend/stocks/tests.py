@@ -280,6 +280,62 @@ class UpdateStockPricesTest(SimpleTestCase):
             log_context.output[0],
         )
 
+    @patch("stocks.services.alpha_vantage.save_prices")
+    @patch("stocks.services.alpha_vantage.transform_time_series")
+    @patch("stocks.services.alpha_vantage.fetch_daily_prices")
+    def test_runs_full_update_flow(
+        self,
+        mock_fetch_daily_prices,
+        mock_transform_time_series,
+        mock_save_prices,
+    ):
+        stock = type(
+            "StockStub",
+            (),
+            {"symbol": "AAPL"},
+        )()
+
+        raw_data = {
+            "Time Series (Daily)": {
+                "2026-09-29": {
+                    "1. open": "100.00",
+                },
+            },
+        }
+
+        clean_prices = [
+            {
+                "date": "2026-09-29",
+            },
+        ]
+
+        expected_result = {
+            "created": 1,
+            "updated": 0,
+        }
+
+        mock_fetch_daily_prices.return_value = raw_data
+        mock_transform_time_series.return_value = clean_prices
+        mock_save_prices.return_value = expected_result
+
+        result = update_stock_prices(stock)
+
+        mock_fetch_daily_prices.assert_called_once_with("AAPL")
+
+        mock_transform_time_series.assert_called_once_with(
+            raw_data["Time Series (Daily)"]
+        )
+
+        mock_save_prices.assert_called_once_with(
+            stock,
+            clean_prices,
+        )
+
+        self.assertEqual(
+            result,
+            expected_result,
+        )
+
 
 class FetchDailyPricesTest(SimpleTestCase):
     @patch("stocks.services.alpha_vantage.requests.get")
