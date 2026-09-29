@@ -291,3 +291,71 @@ class FetchDailyPricesTest(SimpleTestCase):
             "Failed to fetch stock data for AAPL",
         ):
             fetch_daily_prices("AAPL")
+
+    @patch("stocks.services.alpha_vantage.requests.get")
+    def test_raises_runtime_error_when_api_returns_error_message(
+        self,
+        mock_get,
+    ):
+        mock_response = mock_get.return_value
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "Error Message": "Invalid API call"
+        }
+
+        with self.assertRaisesMessage(
+            RuntimeError,
+            "Alpha Vantage error: Invalid API call",
+        ):
+            fetch_daily_prices("AAPL")
+
+    @patch("stocks.services.alpha_vantage.requests.get")
+    def test_raises_runtime_error_when_api_returns_note(
+        self,
+        mock_get,
+    ):
+        mock_response = mock_get.return_value
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "Note": "API rate limit reached"
+        }
+
+        with self.assertRaisesMessage(
+            RuntimeError,
+            "Alpha Vantage notice: API rate limit reached",
+        ):
+            fetch_daily_prices("AAPL")
+
+    @patch("stocks.services.alpha_vantage.requests.get")
+    def test_raises_runtime_error_when_api_returns_information(
+        self,
+        mock_get,
+    ):
+        mock_response = mock_get.return_value
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "Information": "API request limit reached"
+        }
+
+        with self.assertRaisesMessage(
+            RuntimeError,
+            "Alpha Vantage information: API request limit reached",
+        ):
+            fetch_daily_prices("AAPL")
+
+    @patch("stocks.services.alpha_vantage.requests.get")
+    def test_raises_runtime_error_when_daily_time_series_is_missing(
+        self,
+        mock_get,
+    ):
+        mock_response = mock_get.return_value
+        mock_response.raise_for_status.return_value = None
+        mock_response.json.return_value = {
+            "Meta Data": {}
+        }
+
+        with self.assertRaisesMessage(
+            RuntimeError,
+            "Daily time series is missing from API response",
+        ):
+            fetch_daily_prices("AAPL")
