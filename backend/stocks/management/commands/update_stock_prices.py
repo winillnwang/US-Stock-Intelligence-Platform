@@ -1,3 +1,5 @@
+import time
+
 from django.core.management.base import BaseCommand, CommandError
 
 from stocks.models import Stock
@@ -8,22 +10,31 @@ class Command(BaseCommand):
     help = "Update stock prices from Alpha Vantage"
 
     def add_arguments(self, parser):
-        parser.add_argument("symbol", type=str)
+        parser.add_argument("symbols", nargs="+", type=str)
 
     def handle(self, *args, **options):
-        symbol = options["symbol"].upper()
+        symbols = [symbol.upper() for symbol in options["symbols"]]
 
-        try:
-            stock = Stock.objects.get(symbol=symbol)
-        except Stock.DoesNotExist:
-            raise CommandError(f"Stock {symbol} does not exist")
+        stocks = []
 
-        result = update_stock_prices(stock)
+        for symbol in symbols:
+            try:
+                stock = Stock.objects.get(symbol=symbol)
+            except Stock.DoesNotExist:
+                raise CommandError(f"Stock {symbol} does not exist")
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"{stock.symbol}: "
-                f"created={result['created']}, "
-                f"updated={result['updated']}"
+            stocks.append(stock)
+
+        for index, stock in enumerate(stocks):
+            result = update_stock_prices(stock)
+
+            self.stdout.write(
+                self.style.SUCCESS(
+                    f"{stock.symbol}: "
+                    f"created={result['created']}, "
+                    f"updated={result['updated']}"
+                )
             )
-        )
+
+            if index < len(stocks) - 1:
+                time.sleep(1)
