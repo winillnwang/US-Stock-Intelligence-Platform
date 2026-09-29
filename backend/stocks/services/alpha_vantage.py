@@ -54,11 +54,21 @@ def transform_price(date_string, raw_price):
 
 
 def transform_time_series(time_series):
+    if not time_series:
+        raise ValueError("Time series cannot be empty")
+
     clean_prices = []
 
     for date_string, raw_price in time_series.items():
-        clean_price = transform_price(date_string, raw_price)
+        try:
+            clean_price = transform_price(date_string, raw_price)
+        except ValueError:
+            continue
+
         clean_prices.append(clean_price)
+
+    if not clean_prices:
+        raise ValueError("No valid price records found")
 
     return clean_prices
 
