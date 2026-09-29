@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -31,6 +32,18 @@ def stock_detail_api(request, symbol):
     return Response(serializer.data)
 
 
+@extend_schema(
+    parameters=[
+        OpenApiParameter(
+            name="limit",
+            type=int,
+            location=OpenApiParameter.QUERY,
+            required=False,
+            description="Number of price records to return. Must be between 1 and 100.",
+        ),
+    ],
+    responses=StockPriceSerializer(many=True),
+)
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def stock_price_list_api(request, symbol):
