@@ -159,8 +159,17 @@ def fetch_daily_prices(symbol):
         "apikey": api_key,
     }
 
-    response = requests.get(url, params=params, timeout=10)
-    response.raise_for_status()
+    try:
+        response = requests.get(
+            url,
+            params=params,
+            timeout=10,
+        )
+        response.raise_for_status()
+    except requests.RequestException as exc:
+        raise RuntimeError(
+            f"Failed to fetch stock data for {symbol}"
+        ) from exc
 
     data = response.json()
 

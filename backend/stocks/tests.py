@@ -1,8 +1,11 @@
 from unittest.mock import patch
 
+import requests
+
 from django.test import SimpleTestCase
 
 from stocks.services.alpha_vantage import (
+    fetch_daily_prices,
     transform_price,
     transform_time_series,
     update_stock_prices,
@@ -273,3 +276,18 @@ class UpdateStockPricesTest(SimpleTestCase):
             "Stock price update failed for AAPL: API rate limit",
             log_context.output[0],
         )
+
+
+class FetchDailyPricesTest(SimpleTestCase):
+    @patch("stocks.services.alpha_vantage.requests.get")
+    def test_raises_runtime_error_when_request_fails(
+        self,
+        mock_get,
+    ):
+        mock_get.side_effect = requests.RequestException("Network error")
+
+        with self.assertRaisesMessage(
+            RuntimeError,
+            "Failed to fetch stock data for AAPL",
+        ):
+            fetch_daily_prices("AAPL")
