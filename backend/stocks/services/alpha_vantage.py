@@ -4,6 +4,9 @@ from decimal import Decimal
 
 import requests
 
+from ..models import StockPrice
+
+
 def transform_price(date_string, raw_price):
     price_date = datetime.strptime(date_string, "%Y-%m-%d").date()
 
@@ -33,6 +36,8 @@ def transform_price(date_string, raw_price):
         "close": close_price,
         "volume": volume,
     }
+
+
 def transform_time_series(time_series):
     clean_prices = []
 
@@ -41,7 +46,54 @@ def transform_time_series(time_series):
         clean_prices.append(clean_price)
 
     return clean_prices
-      
+
+
+def save_price(stock, clean_price):
+    stock_price, created = StockPrice.objects.update_or_create(
+        stock=stock,
+        date=clean_price["date"],
+        defaults={
+            "open": clean_price["open"],
+            "high": clean_price["high"],
+            "low": clean_price["low"],
+            "close": clean_price["close"],
+            "volume": clean_price["volume"],
+        },
+    )
+
+    return stock_price, created
+
+
+def save_prices(stock, clean_prices):
+    created_count = 0
+    updated_count = 0
+
+    for clean_price in clean_prices:
+        _, created = save_price(stock, clean_price)
+
+        if created:
+            created_count += 1
+        else:
+            updated_count += 1
+
+    return {
+        "created": created_count,
+        "updated": updated_count,
+    }
+
+
+def update_stock_prices(stock):
+    data = fetch_daily_prices(stock.symbol)
+
+    time_series = data["Time Series (Daily)"]
+
+    clean_prices = transform_time_series(time_series)
+
+    result = save_prices(stock, clean_prices)
+
+    return result
+
+
 def fetch_daily_prices(symbol):
     api_key = os.getenv("ALPHA_VANTAGE_API_KEY")
 
@@ -73,4 +125,4 @@ def fetch_daily_prices(symbol):
     if "Time Series (Daily)" not in data:
         raise RuntimeError("Daily time series is missing from API response")
 
-    return data   
+    return data
