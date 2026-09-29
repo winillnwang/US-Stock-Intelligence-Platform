@@ -414,6 +414,25 @@ class SavePriceTest(TestCase):
             company_name="Apple Inc.",
         )
 
+    def test_save_prices_returns_zero_counts_for_empty_list(self):
+        result = save_prices(
+            self.stock,
+            [],
+        )
+
+        self.assertEqual(
+            result,
+            {
+                "created": 0,
+                "updated": 0,
+            },
+        )
+
+        self.assertEqual(
+            StockPrice.objects.count(),
+            0,
+        )
+
     def test_creates_stock_price_when_record_does_not_exist(self):
         clean_price = {
             "date": "2026-09-29",
