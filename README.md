@@ -124,11 +124,11 @@ flowchart LR
 
 
 
-🚧 Under Development
+✅ Core Development Complete
 
-目前核心後端功能已完成，包含 REST API、JWT Authentication、Data Pipeline、Data Quality Validation、Logging、Exception Handling、Automated Tests、Docker、GitHub Actions CI 與 OpenAPI / Swagger 文件。
+核心後端功能已完成，包含 REST API、JWT Authentication、Data Pipeline、Data Quality Validation、Logging、Exception Handling、Automated Tests、Docker、Docker Compose、GitHub Actions CI 與 OpenAPI / Swagger 文件。
 
-目前進入專案文件整理、架構圖、Demo 與面試準備階段。
+目前進入作品集收尾階段，重點為 Demo 整理、面試準備與最終專案檢查。
 
 
 
